@@ -159,6 +159,14 @@ body.gate-locked{overflow:hidden}
 .btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px)}
 .btn svg{width:16px;height:16px}
 
+.proposal-link{
+  display:inline-flex;align-items:center;gap:9px;margin-top:22px;background:none;border:0;cursor:pointer;
+  font-family:var(--ff-head);font-size:13px;letter-spacing:.04em;color:var(--gold);
+  border-bottom:1px solid var(--gold-dim);padding-bottom:3px;transition:color .25s,border-color .25s;
+}
+.proposal-link:hover{color:var(--gold-2);border-color:var(--gold-2)}
+.proposal-link svg{width:16px;height:16px}
+
 /* eyebrow / kicker */
 .kicker{
   display:inline-flex;align-items:center;gap:10px;font-family:var(--ff-head);font-size:12px;
@@ -549,6 +557,61 @@ body.modal-locked{overflow:hidden}
 .modal-success-icon svg{width:26px;height:26px;color:var(--gold)}
 .modal-success .btn{margin-top:24px}
 
+/* ============ PROPOSAL DOCUMENT MODAL ============ */
+.docmodal{position:fixed;inset:0;z-index:4100;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility .35s}
+.docmodal.open{opacity:1;visibility:visible}
+.docmodal-box{
+  position:relative;width:100%;max-width:840px;height:88vh;background:var(--bg-soft);
+  border:1px solid var(--line-soft);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
+  transform:translateY(24px) scale(.97);opacity:0;transition:transform .4s var(--ease),opacity .4s var(--ease);
+  box-shadow:0 50px 100px -30px rgba(0,0,0,.8);
+}
+.docmodal.open .docmodal-box{transform:translateY(0) scale(1);opacity:1}
+.docmodal-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:24px 28px;
+  border-bottom:1px solid var(--line-soft);background:var(--panel);flex-shrink:0;
+}
+.docmodal-title{font-family:var(--ff-head);font-size:22px;font-weight:700;text-transform:uppercase;color:var(--ink);letter-spacing:.02em}
+.docmodal-head-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.docmodal-dl{padding:11px 18px;font-size:12px;white-space:nowrap}
+.docmodal-body{flex:1;overflow-y:auto;padding:30px 32px 50px;-webkit-overflow-scrolling:touch}
+.doc-p{font-size:14px;line-height:1.75;color:var(--ink-dim);margin-bottom:12px}
+.doc-h1{
+  font-family:var(--ff-head);font-size:19px;font-weight:700;text-transform:uppercase;color:var(--gold);
+  margin-top:34px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line-soft);letter-spacing:.02em;
+}
+.docmodal-body>.doc-h1:first-of-type{margin-top:8px}
+.doc-h2{font-family:var(--ff-head);font-size:14.5px;font-weight:600;text-transform:uppercase;color:var(--ink);margin-top:18px;margin-bottom:8px;letter-spacing:.02em}
+.doc-list{margin:0 0 14px;padding-left:0;list-style:none}
+.doc-list li{position:relative;padding-left:20px;font-size:14px;line-height:1.7;color:var(--ink-dim);margin-bottom:7px}
+.doc-list li::before{content:'';position:absolute;left:3px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.doc-list b, .doc-p b{color:var(--ink);font-weight:600}
+.doc-table-wrap{overflow-x:auto;margin-bottom:14px;border:1px solid var(--line-soft);border-radius:12px}
+.doc-table{width:100%;border-collapse:collapse;font-size:13px;min-width:420px}
+.doc-table th{
+  background:var(--panel-2);color:var(--gold);font-family:var(--ff-head);font-weight:600;font-size:11px;
+  letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:11px 14px;white-space:nowrap;
+}
+.doc-table th:not(:first-child){text-align:right}
+.doc-table td{padding:9px 14px;border-top:1px solid var(--line-soft);color:var(--ink-dim);white-space:nowrap}
+.doc-table td:not(:first-child){text-align:right;font-family:var(--ff-num);color:var(--ink)}
+.doc-table-tiers th:not(:first-child), .doc-table-tiers td:not(:first-child){text-align:center}
+.doc-table-budget tr.sub td{color:var(--gold-dim);font-weight:600;background:rgba(242,194,48,.04)}
+.doc-table-budget tr.total td{color:var(--gold);font-weight:700;background:rgba(242,194,48,.08);border-top:1.5px solid var(--gold-dim)}
+.doc-total-line{
+  font-family:var(--ff-head);font-size:18px;font-weight:700;color:var(--gold);text-align:center;
+  padding:16px 0;letter-spacing:.02em;
+}
+.doc-footer-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:32px;padding-top:28px;border-top:1px solid var(--line-soft)}
+@media(max-width:700px){
+  .docmodal{padding:0}
+  .docmodal-box{max-width:100%;height:100vh;border-radius:0}
+  .docmodal-head{padding:18px 18px}
+  .docmodal-title{font-size:17px}
+  .docmodal-body{padding:22px 18px 40px}
+  .docmodal-dl span{display:none}
+}
+
 @media(max-width:768px){
   .navlinks{display:none}
   .nav-cta{display:none}
@@ -598,6 +661,8 @@ body.modal-locked{overflow:hidden}
 <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
 <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></symbol>
 <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
 <symbol id="i-actor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></symbol>
 <symbol id="i-wrestle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M12 8v6M8 22l4-8 4 8M6 12l6 2 6-2"/></symbol>
 <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></symbol>
@@ -658,7 +723,7 @@ body.modal-locked{overflow:hidden}
     <p class="hero-sub reveal in" style="transition-delay:.5s">Монголын хамгийн том цэргийн реалити контент — олны танил 10 оролцогч бодит цэргийн ангид, 10 хоногийн турш сорилтод ордог.</p>
     <div class="hero-actions reveal in" style="transition-delay:.62s">
       <a href="#pricing" class="btn btn-gold">Ивээн тэтгэгчээр нэгдэх <svg><use href="#i-arrow-right"/></svg></a>
-      <a href="#about" class="btn btn-ghost">Төслийг танилцуулах</a>
+      <button type="button" class="btn btn-ghost" id="openProposalBtn">Дэлгэрэнгүй төсөлтэй танилцах</button>
     </div>
     <div class="hero-meta reveal in" style="transition-delay:.74s">
       <div class="item"><span class="num">10</span><span class="lbl">Олны танил оролцогч</span></div>
@@ -984,6 +1049,9 @@ body.modal-locked{overflow:hidden}
       <div class="kicker" style="justify-content:center">Үнийн санал</div>
       <h2>Ивээн тэтгэгчийн <span class="accent">багцууд</span></h2>
       <p>Төслийн цар хүрээ, брэндийн харагдацад тохирсон гурван түвшний хамтын ажиллагааны санал.</p>
+      <button type="button" class="proposal-link" id="openProposalBtn2">
+        <svg><use href="#i-doc"/></svg>Бүрэн, дэлгэрэнгүй төслийн саналтай танилцах
+      </button>
     </div>
     <div class="pricing-grid">
       <div class="price-card reveal">
@@ -1124,6 +1192,266 @@ body.modal-locked{overflow:hidden}
   </div>
 </div>
 
+<!-- PROPOSAL DOCUMENT MODAL -->
+<div class="docmodal" id="proposalModal">
+  <div class="modal-backdrop" id="proposalBackdrop"></div>
+  <div class="docmodal-box">
+    <div class="docmodal-head">
+      <div class="docmodal-head-text">
+        <div class="kicker" style="margin-bottom:4px">Ивээн тэтгэгчид зориулсан төслийн санал</div>
+        <h3 class="docmodal-title">ЭХ ОРНЫ ДУУДЛАГА</h3>
+      </div>
+      <div class="docmodal-head-actions">
+        <a href="assets/eh-oron-duudlaga-tosol.pdf" download class="btn btn-gold docmodal-dl"><svg><use href="#i-download"/></svg><span>PDF татах</span></a>
+        <button class="modal-close" id="proposalClose" type="button" aria-label="close"><svg><use href="#i-close"/></svg></button>
+      </div>
+    </div>
+
+    <div class="docmodal-body">
+
+      <p class="doc-p">Хэрэгжүүлэгч: <b>MESMERISM</b> &nbsp;·&nbsp; Хамтрагч: Батлан хамгаалах яамны &ldquo;Барилга захиалагчийн алба&rdquo; ТӨААТҮГ, Хуурай замын цэргийн командлал &nbsp;·&nbsp; 2026 он, Улаанбаатар хот</p>
+
+      <h4 class="doc-h1">1. Төслийн товч танилцуулга</h4>
+      <p class="doc-p">&ldquo;Эх орны дуудлага&rdquo; нь олны танил 10 оролцогчийг бодит цэргийн ангид байршуулан, 10 хоногийн хугацаанд цэргийн сургалт, бэлтгэлд хамруулж, сорилтонд оруулах Монголын хамгийн том цэргийн реалити контент юм.</p>
+      <p class="doc-p">Төсөл нь нийт 4–6 ангиас бүрдэх бөгөөд анги тус бүр 50–70 минутын үргэлжлэх хугацаатай. Бүх ангиудыг 7 хоног бүр Телевизийн суваг болон MESMERISM YouTube сувгуудаар үзэгчдэд <b>ҮНЭ ТӨЛБӨРГҮЙ</b> хүргэнэ — ивээн тэтгэгчийн брэнд төлбөрийн ямар ч хаалтгүйгээр хамгийн өргөн үзэгчдэд хүрнэ гэсэн үг.</p>
+      <h5 class="doc-h2">Оролцогчдын туулах сорилтууд</h5>
+      <ul class="doc-list">
+        <li>Сэтгэлзүй болон тэсвэр хатуужлын сорилт давах</li>
+        <li>Хээрийн нөхцөлд үүрэг гүйцэтгэх</li>
+        <li>Казармд байрлах</li>
+        <li>Буу зэвсэгтэй харьцах</li>
+      </ul>
+
+      <h4 class="doc-h1">2. Төслийн зорилго</h4>
+      <ul class="doc-list">
+        <li>Эх оронгоо илүү ойлгон, хайрлах үзлийг түгээх</li>
+        <li>Цэргийн албаны талаарх зөв ойлголт өгөх</li>
+        <li>Бие бялдар, сэтгэлзүйн бэлтгэлийн ач холбогдлыг ойлгуулах</li>
+        <li>Багийн ажиллагааг сурталчлах</li>
+        <li>Хариуцлагатай иргэн төлөвшүүлэх</li>
+        <li>Цэргийн амьдралыг бодитоор харуулах</li>
+      </ul>
+
+      <h4 class="doc-h1">3. Гарцаагүй биднийг сонгох 8 шалтгаан</h4>
+      <h5 class="doc-h2">3.1. Төрийн түвшний албан ёсны хамтрагч — давтагдашгүй access</h5>
+      <p class="doc-p">БХЯ-ны &ldquo;Барилга захиалагчийн алба&rdquo; ТӨААТҮГ болон Хуурай замын цэргийн командлалын албан ёсны дэмжлэгтэйгээр бодит цэргийн анги, техник, байлдагчидтай зураг авалт хийнэ. Энэ нэвтрэх эрхийг өөр ямар ч продакшн мөнгөөр худалдаж авч чадахгүй.</p>
+      <h5 class="doc-h2">3.2. Монголд анх удаа — first mover давуу тал</h5>
+      <p class="doc-p">Цэргийн реалити формат Монголд урьд өмнө хийгдэж байгаагүй. Анхны төслийн ерөнхий ивээн тэтгэгчийн нэр энэ жанрын түүхтэй хамт үлдэнэ.</p>
+      <h5 class="doc-h2">3.3. Баталгаажсан түгээлт — 1.1 сая дагагч</h5>
+      <p class="doc-p">MESMERISM суваг 1,139,143 subscribers, сүүлийн 365 хоногт 57.9 сая үзэлт, 754 мянган unique viewers-тэй. Таны брэнд бүрдсэн, идэвхтэй аудиторид баталгаатай хүрнэ.</p>
+      <h5 class="doc-h2">3.4. Батлагдсан амжилтын түүх</h5>
+      <p class="doc-p">YouTube Champ 2023 — 5.5 сая, 2024 — 3 сая, 2025 — 2 сая үзэлт, Money Doors — 370K+. Том форматын реалити контентыг 3 жил дараалан амжилттай хэрэгжүүлсэн баг.</p>
+      <h5 class="doc-h2">3.5. Skip хийгддэггүй реклам — контент доторх placement</h5>
+      <p class="doc-p">Оролцогчдын өмссөн хувцас, идсэн хоол, ашигласан техник бол контентын өөрийнх нь хэсэг — алгасах, хаах боломжгүй, зохиомол биш учраас үзэгчдэд итгэл төрүүлдэг.</p>
+      <h5 class="doc-h2">3.6. Худалдан авагч гол бүлэгт хүрнэ</h5>
+      <p class="doc-p">Үзэгчдийн 60 орчим хувь нь 18–34 насны, худалдан авах шийдвэрээ өөрөө гаргадаг идэвхтэй хэрэглэгчид. Эмэгтэй, эрэгтэй харьцаа 51:49 тул бараг бүх төрлийн бүтээгдэхүүнд тохирно.</p>
+      <h5 class="doc-h2">3.7. Хос платформын түгээлт</h5>
+      <p class="doc-p">YouTube залуу үеийг, телевиз ахмад болон орон нутгийн үзэгчдийг бүрэн хамарна — нэг төслөөр хоёр платформ, давхардсан хүртээмж.</p>
+      <h5 class="doc-h2">3.8. Кино түвшний чанар + нийгмийн хариуцлага</h5>
+      <p class="doc-p">Sony Burano, FX6, FX3, DJI Inspire 3, 25+ мэргэжлийн багаар кино чанартай бүтээгдэхүүн гаргана. Эх оронч төслийг дэмжсэн нь компанийн нийгмийн хариуцлагын (CSR) бодит кейс болно.</p>
+
+      <h4 class="doc-h1">4. Хүрэх үзэгчид — MESMERISM сувгийн үзүүлэлт</h4>
+      <ul class="doc-list">
+        <li>Нийт subscribers: <b>1,139,143</b></li>
+        <li>Сүүлийн 365 хоногийн үзэлт: <b>57,989,039</b> үзэлт</li>
+        <li>Нийт үзсэн цаг: <b>7 сая</b> цаг</li>
+        <li>24 цагийн watch time views: <b>98 мянга</b></li>
+        <li>Unique viewers: <b>754 мянга</b></li>
+      </ul>
+      <h5 class="doc-h2">Үзэгчдийн насны хуваарилалт, хүйсийн харьцаа</h5>
+      <div class="doc-table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Нас</th><th>Эмэгтэй</th><th>Эрэгтэй</th><th>Нийт эзлэх хувь</th></tr></thead>
+          <tbody>
+            <tr><td>13–17 нас</td><td>4.2%</td><td>4.5%</td><td>8.7%</td></tr>
+            <tr><td>18–24 нас</td><td>10.9%</td><td>12%</td><td>22.9%</td></tr>
+            <tr><td>25–34 нас</td><td>18.5%</td><td>18.5%</td><td>37.0%</td></tr>
+            <tr><td>35–44 нас</td><td>12.0%</td><td>10.1%</td><td>22.1%</td></tr>
+            <tr><td>45+ нас</td><td>5.3%</td><td>3.9%</td><td>9.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h5 class="doc-h2">Ижил төстэй контентын амжилт</h5>
+      <ul class="doc-list">
+        <li>YouTube Champ 2023 — 5,535,496 үзэлт</li>
+        <li>YouTube Champ 2024 — 3,034,769 үзэлт</li>
+        <li>YouTube Champ 2025 — 2,014,816 үзэлт</li>
+        <li>Money Doors — 370,256+ үзэлт</li>
+      </ul>
+
+      <h4 class="doc-h1">5. Оролцох хоёр хэлбэр: брэндээрээ эсвэл бүтээгдэхүүнээрээ</h4>
+      <p class="doc-p">Ивээн тэтгэгч байгууллага компанийн үндсэн нэрээрээ эсвэл тодорхой бүтээгдэхүүнээрээ гэсэн хоёр хэлбэрээр оролцох боломжтой. Аль аль нь өөрийн гэсэн давуу талтай бөгөөд хослуулж болно.</p>
+      <h5 class="doc-h2">5.1. Хэлбэр 01 — Брэндээрээ (компанийн үндсэн нэрээр) оролцох</h5>
+      <p class="doc-p">Тохиромжтой: банк, санхүү, даатгал, телеком, групп компани — нэрээ өргөх, итгэл бүтээх зорилготой байгууллагууд.</p>
+      <ul class="doc-list">
+        <li><b>Нэрэмжит цол</b> — &ldquo;Эх орны дуудлага · Presented by Таны брэнд&rdquo;. Төслийн нэр дурдагдах бүрд таны нэр ТВ, YouTube, хэвлэл, постер дээр хамт дурдагдана.</li>
+        <li><b>Image transfer</b> — эх оронч үзэл, сахилга бат, итгэл, төрийн түвшний хамтын ажиллагаа гэсэн үнэт зүйлс таны брэндэд шууд шингэнэ.</li>
+        <li><b>360° лого exposure</b> — нээлт/төгсгөлийн титр, анги бүрийн дурдлага, нүүр зураг, хэвлэлийн хурлын арын дэвсгэр, оролцогчдын хувцасны энгэрт лого байршина.</li>
+        <li><b>Employer branding</b> — үзэгчдийн 60% нь 18–34 нас буюу таны ирээдүйн ажилтнууд.</li>
+        <li><b>CSR / нийгмийн хариуцлага</b> — төр, залуучууд, эх оронч үзлийг дэмжсэн бодит кейс жилийн тайланд орно.</li>
+      </ul>
+      <h5 class="doc-h2">5.2. Хэлбэр 02 — Бүтээгдэхүүнээрээ оролцох</h5>
+      <p class="doc-p">Тохиромжтой: хүнс, ундаа, амттан, хувцас, техник, өдөр тутмын хэрэглээний бараа — борлуулалтад шууд нөлөөлөх зорилготой брэндүүд.</p>
+      <ul class="doc-list">
+        <li>Бодит хэрэглээний placement — оролцогчид таны бүтээгдэхүүнийг 10 хоног бодитоор хэрэглэнэ.</li>
+        <li>Өндөр давтамж — бүтээгдэхүүн анги бүрт олон удаа дэлгэцэнд гарна.</li>
+        <li>&ldquo;Hero product&rdquo; мөчүүд — сорилтын шагнал, багийн урамшуулал болж драмын төвд орно.</li>
+        <li>Бэлэн мөнгөний дарамт бага — багц + бараагаар хослуулсан (hybrid) нөхцөл боломжтой.</li>
+        <li>Хэмжигдэхүйц үр дүн — линк, промо код, QR-аар борлуулалтын нөлөөг шууд хэмжинэ.</li>
+      </ul>
+
+      <h4 class="doc-h1">6. Салбар тус бүрийн давуу тал</h4>
+      <h5 class="doc-h2">6.1. Шингэн хүнс (ус, ундаа, energy drink, хүүхдийн сүү)</h5>
+      <ul class="doc-list">
+        <li>Цэргийн бэлтгэл = усны байнгын хэрэглээ. Хээрийн сургалт, гүйлт, дасгал бүрийн дараа таны брэндтэй лонх кадр бүрт гарна.</li>
+        <li>Energy drink-ийн төгс нөхцөл — шөнийн манаа, хүнд сорилтын өмнөх &ldquo;эрч авах&rdquo; мөч.</li>
+        <li>Хүүхдийн сүү / гэр бүлийн бүтээгдэхүүн — &ldquo;гэрээс илгээмж ирэх&rdquo; сэтгэл хөдөлгөм сегмент.</li>
+        <li>Багийн хэрэглээ ч брэндтэй — 25+ гишүүнтэй багийн 10 хоногийн хэрэглээ.</li>
+      </ul>
+      <h5 class="doc-h2">6.2. Амттан (чихэр, шоколад, snack)</h5>
+      <ul class="doc-list">
+        <li>&ldquo;Шагналын мөч&rdquo;-ийн эзэн болно — цэргийн хатуу дэглэм дунд хамгийн их хүлээгдсэн зүйл.</li>
+        <li>Сорилтын шагнал, урамшуулал — өрсөлдөөний драмын яг төвд орно.</li>
+        <li>Гэр санагдах мөч — амттан = тайтгарал, дурсамж.</li>
+        <li>Виралд хамгийн ойр — clip болж тархах магадлал өндөр.</li>
+        <li>Гол хэрэглэгч нь яг үзэгчид — 13–24 нас үзэгчдийн 31%.</li>
+      </ul>
+      <h5 class="doc-h2">6.3. Банк, санхүүгийн байгууллага</h5>
+      <ul class="doc-list">
+        <li>Итгэлийн ассоциаци — сахилга бат, тогтвортой байдал, эх оронч үзэл энэ төслийн мөн чанар.</li>
+        <li>18–34 нас = үзэгчдийн 60% — customer acquisition-ий үнэ цэнэтэй цонх.</li>
+        <li>Бодит integration — шагналын сан банкаар дамжих, апп татах QR + урамшуулалт кампанит ажил.</li>
+        <li>Хос платформын давуу тал — ТВ ахмад, YouTube залуу digital хэрэглэгчид.</li>
+        <li>Employer branding + CSR — залуучуудад ажил олгогчийн нэр хүнд.</li>
+      </ul>
+      <p class="doc-p">Дээрх гурван салбараас гадна хувцас, гутал, техник, тээвэр, харилцаа холбоо, даатгал зэрэг дурын салбарт тохирсон байршуулалтын санааг тусгайлан боловсруулж танилцуулна.</p>
+
+      <h4 class="doc-h1">7. Хэрэгжүүлэх хугацааны төлөвлөгөө</h4>
+      <h5 class="doc-h2">Зураг авалтын багийн бүрэлдэхүүн</h5>
+      <ul class="doc-list">
+        <li>Найруулагчийн баг — 4</li>
+        <li>Зураглаачийн баг — 10</li>
+        <li>Зураачийн баг — 3</li>
+        <li>Дууны баг — 4</li>
+        <li>Гэрэлтүүлгийн баг — 4</li>
+      </ul>
+      <p class="doc-p">Зураг авалтад Sony Burano ×2, Sony FX6 ×2, Sony FX3 ×2, DJI Inspire 3 дрон, GoPro ×5 болон кино түвшний линз, гэрэлтүүлгийн иж бүрдэл ашиглана.</p>
+      <div class="doc-table-wrap">
+        <table class="doc-table">
+          <thead><tr><th>Үе шат</th><th>Хугацаа</th><th>Сар</th></tr></thead>
+          <tbody>
+            <tr><td>Судалгаа</td><td>21 хоног</td><td>VI сар</td></tr>
+            <tr><td>Зохиол</td><td>30 хоног</td><td>VI–VII сар</td></tr>
+            <tr><td>Бэлтгэл ажил</td><td>21 хоног</td><td>VII сар</td></tr>
+            <tr><td>Зураг авалт</td><td>10 хоног</td><td>VII–VIII сар</td></tr>
+            <tr><td>Эвлүүлгэ (post-production)</td><td>30 хоног</td><td>VIII сар</td></tr>
+            <tr><td>Маркетинг</td><td>21+ хоног</td><td>VIII–IX сар</td></tr>
+            <tr><td>Нээлт (D-DAY)</td><td>—</td><td>IX сар</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="doc-h1">8. Төсвийн дэлгэрэнгүй задаргаа</h4>
+      <p class="doc-p">Доорх дүн нь 10 хоногийн зураг авалтаар бодогдсон нийт төсөв юм.</p>
+      <div class="doc-table-wrap">
+        <table class="doc-table doc-table-budget">
+          <thead><tr><th>Цалин · хүний нөөц</th><th>Дүн (₮)</th></tr></thead>
+          <tbody>
+            <tr class="sub"><td>Найруулагчийн баг</td><td>32,000,000</td></tr>
+            <tr><td>Director / Найруулагч</td><td>20,000,000</td></tr>
+            <tr><td>Assistant Director (AD)</td><td>7,000,000</td></tr>
+            <tr><td>Talent Coordinator</td><td>5,000,000</td></tr>
+            <tr class="sub"><td>Зураглаачийн баг</td><td>58,000,000</td></tr>
+            <tr><td>DOP / Ерөнхий зураглаач</td><td>10,000,000</td></tr>
+            <tr><td>Camera Operator ×5</td><td>25,000,000</td></tr>
+            <tr><td>Gimbal Operator ×2</td><td>15,000,000</td></tr>
+            <tr><td>Drone Operator</td><td>5,000,000</td></tr>
+            <tr><td>DIT / Media Manager</td><td>3,000,000</td></tr>
+            <tr class="sub"><td>Дуу · гэрэл</td><td>45,000,000</td></tr>
+            <tr><td>Sound Designer</td><td>6,000,000</td></tr>
+            <tr><td>Sound Engineer</td><td>8,000,000</td></tr>
+            <tr><td>Boom Operator ×2</td><td>6,000,000</td></tr>
+            <tr><td>Gaffer</td><td>10,000,000</td></tr>
+            <tr><td>Lighting Assistant ×3</td><td>15,000,000</td></tr>
+            <tr class="sub"><td>Пост продакшн</td><td>21,000,000</td></tr>
+            <tr><td>Lead Editor</td><td>8,000,000</td></tr>
+            <tr><td>Assistant Editor</td><td>3,000,000</td></tr>
+            <tr><td>Motion Graphic</td><td>5,000,000</td></tr>
+            <tr><td>Colorist</td><td>5,000,000</td></tr>
+            <tr class="sub"><td>Зураач · оролцогчид</td><td>62,000,000</td></tr>
+            <tr><td>Зураач + туслах ×2</td><td>12,000,000</td></tr>
+            <tr><td>Оролцогчдын цалин (10 оролцогч)</td><td>50,000,000</td></tr>
+            <tr class="total"><td>ЦАЛИНГИЙН ДҮН</td><td>218,000,000 ₮</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="doc-table-wrap" style="margin-top:14px">
+        <table class="doc-table doc-table-budget">
+          <thead><tr><th>Техник · бусад</th><th>Дүн (₮)</th></tr></thead>
+          <tbody>
+            <tr class="sub"><td>Камер · дрон</td><td>56,800,000</td></tr>
+            <tr><td>Sony Burano ×2</td><td>16,400,000</td></tr>
+            <tr><td>Sony FX6 ×2</td><td>13,400,000</td></tr>
+            <tr><td>Sony FX3 ×2</td><td>10,000,000</td></tr>
+            <tr><td>DJI Inspire 3 / дрон</td><td>1,000,000</td></tr>
+            <tr><td>GoPro ×5</td><td>16,000,000</td></tr>
+            <tr class="sub"><td>Линз · гэрэл · gimbal</td><td>21,800,000</td></tr>
+            <tr><td>Линз 16–35mm ×2</td><td>1,400,000</td></tr>
+            <tr><td>Линз 24–70mm ×2</td><td>1,400,000</td></tr>
+            <tr><td>Линз 70–200mm ×2</td><td>2,200,000</td></tr>
+            <tr><td>35mm Prime · 50mm Prime</td><td>1,600,000</td></tr>
+            <tr><td>Cineplus гэрэлтүүлгийн иж бүрдэл</td><td>14,000,000</td></tr>
+            <tr><td>Gimbal ×2</td><td>1,200,000</td></tr>
+            <tr class="sub"><td>Бусад</td><td>28,000,000</td></tr>
+            <tr><td>Зураачийн ажил, тайз бэлтгэл</td><td>8,000,000</td></tr>
+            <tr><td>Нэмэлт хүнс, хангамж</td><td>10,000,000</td></tr>
+            <tr><td>Гэнэтийн эрсдэлийн сан</td><td>10,000,000</td></tr>
+            <tr class="total"><td>ТЕХНИКИЙН ДҮН</td><td>106,600,000 ₮</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="doc-total-line">НИЙТ ТӨСӨВ: 324,600,000 ₮ (324.6 сая төгрөг)</p>
+
+      <h4 class="doc-h1">9. Ивээн тэтгэгчийн багцууд</h4>
+      <p class="doc-p">Нийт 324.6 сая төгрөгийн төсвийг дараах багцуудаар бүрдүүлэхээр төлөвлөж байна. Багцын дүн, эрхийг байгууллагын хэрэгцээнд нийцүүлэн уян хатан тохируулах боломжтой.</p>
+      <div class="doc-table-wrap">
+        <table class="doc-table doc-table-tiers">
+          <thead><tr><th>Ивээн тэтгэгчийн эрх</th><th>Ерөнхий</th><th>Алтан</th><th>Мөнгөн</th><th>Хүрэл</th><th>Дэмжигч</th></tr></thead>
+          <tbody>
+            <tr><td>Хөрөнгө оруулалт (₮)</td><td>150 сая+</td><td>80 сая</td><td>40 сая</td><td>20 сая</td><td>Бараа, үйлчилгээ</td></tr>
+            <tr><td>&ldquo;Presented by&rdquo; нэрэмжит цол</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Нээлт, төгсгөлийн титрт лого</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Анги бүрт брэнд дурдагдах</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+            <tr><td>Product placement</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Тусгай брэндийн сегмент/сорилт</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td>Оролцогчидтой сурталчилгааны контент</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+            <tr><td>Social media постуудад лого, tag</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Хэвлэлийн хурал, нээлтэд оролцох</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+            <tr><td>YouTube тайлбарт линк</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="doc-h1">10. Хамтран ажиллах урилга</h4>
+      <p class="doc-p">&ldquo;Эх орны дуудлага&rdquo; бол зүгээр нэг шоу биш — эх оронч үзэл, залуучуудын төлөвшил, цэргийн албаны нэр хүндийг өргөх нийгмийн ач холбогдолтой, түүхэн төсөл юм. Таны байгууллага энэхүү аянд нэгдсэнээр сая сая монгол үзэгчдийн зүрх сэтгэлд брэндээ эерэгээр байршуулах давтагдашгүй боломжийг олж авна.</p>
+      <p class="doc-p">Бид таны байгууллагын зорилго, маркетингийн хэрэгцээнд нийцсэн тусгай багц, хамтын ажиллагааны нөхцөлийг уулзалтаар дэлгэрэнгүй танилцуулахад бэлэн байна.</p>
+      <h5 class="doc-h2">Холбоо барих</h5>
+      <ul class="doc-list">
+        <li>Хэрэгжүүлэгч: <b>MESMERISM</b></li>
+        <li>Утас: 9904-3988</li>
+        <li>И-мэйл: mesmerismcomedy@gmail.com</li>
+        <li>Хаяг: Улаанбаатар хот, Монгол Улс</li>
+      </ul>
+
+      <div class="doc-footer-cta">
+        <a href="assets/eh-oron-duudlaga-tosol.pdf" download class="btn btn-gold"><svg><use href="#i-download"/></svg>PDF хувилбарыг татах</a>
+        <button type="button" class="btn btn-ghost" id="proposalToSponsorBtn">Ивээн тэтгэгч болох</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
 // ---- PIN gate ----
 (function(){
@@ -1236,6 +1564,37 @@ body.modal-locked{overflow:hidden}
       submitBtn.textContent = submitBtnLabel;
     }
   });
+})();
+
+// ---- proposal document modal ----
+(function(){
+  const modal = document.getElementById('proposalModal');
+  if(!modal) return;
+  const backdrop = document.getElementById('proposalBackdrop');
+  const closeBtn = document.getElementById('proposalClose');
+  const openBtns = [document.getElementById('openProposalBtn'), document.getElementById('openProposalBtn2')].filter(Boolean);
+  const toSponsorBtn = document.getElementById('proposalToSponsorBtn');
+  const body = modal.querySelector('.docmodal-body');
+
+  function openDoc(){
+    modal.classList.add('open');
+    document.body.classList.add('modal-locked');
+    if(body) body.scrollTop = 0;
+  }
+  function closeDoc(){
+    modal.classList.remove('open');
+    document.body.classList.remove('modal-locked');
+  }
+  openBtns.forEach(btn=>btn.addEventListener('click', openDoc));
+  backdrop.addEventListener('click', closeDoc);
+  closeBtn.addEventListener('click', closeDoc);
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeDoc(); });
+  if(toSponsorBtn){
+    toSponsorBtn.addEventListener('click', ()=>{
+      closeDoc();
+      document.getElementById('pricing').scrollIntoView({behavior:'smooth'});
+    });
+  }
 })();
 
 // nav scroll state
