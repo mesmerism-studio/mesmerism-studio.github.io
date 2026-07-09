@@ -604,30 +604,44 @@ body.modal-locked{overflow:hidden}
 }
 .doc-footer-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:32px;padding-top:28px;border-top:1px solid var(--line-soft)}
 
-/* money figures masked until re-verified (text swapped via JS, see .money-figure) */
-.money-figure{transition:color .2s}
-.docmodal-body:not(.money-unlocked) .money-figure{user-select:none;letter-spacing:.06em}
-.money-gate{
-  display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--gold-dim);
-  border-radius:14px;padding:18px 22px;margin-bottom:20px;
+/* total-budget lock card (replaces the НИЙТ ТӨСӨВ line until unlocked) */
+.total-lock-locked{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center;background:var(--panel);
+  border:1px solid var(--gold-dim);border-radius:14px;padding:18px 22px;
 }
-.docmodal-body.money-unlocked .money-gate{display:none}
-.money-gate-icon{
+.total-lock-icon{
   width:42px;height:42px;border-radius:50%;background:rgba(242,194,48,.12);flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
 }
-.money-gate-icon svg{width:20px;height:20px;color:var(--gold)}
-.money-gate-text{display:flex;flex-direction:column;gap:3px;flex:1;min-width:180px}
-.money-gate-text strong{font-family:var(--ff-head);font-size:13.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
-.money-gate-text span{font-size:12.5px;color:var(--ink-faint)}
-.money-gate-pins{display:flex;gap:8px}
-.money-pin{
+.total-lock-icon svg{width:20px;height:20px;color:var(--gold)}
+.total-lock-text{display:flex;flex-direction:column;gap:3px}
+.total-lock-text strong{font-family:var(--ff-head);font-size:13.5px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+.total-lock-text span{font-size:12.5px;color:var(--ink-faint)}
+.total-lock-pins{display:flex;gap:8px}
+.total-pin, .pdf-pin{
   width:38px;height:44px;text-align:center;font-family:var(--ff-num);font-size:19px;font-weight:700;color:var(--ink);
   background:var(--bg-soft);border:1.5px solid var(--line-soft);border-radius:9px;transition:border-color .25s;
   -webkit-appearance:none;
 }
-.money-pin:focus{outline:none;border-color:var(--gold)}
-.money-gate.shake{animation:gateShake .45s}
+.total-pin:focus, .pdf-pin:focus{outline:none;border-color:var(--gold)}
+.total-lock-locked.shake{animation:gateShake .45s}
+
+/* pdf download gate popup */
+.pdf-gate-modal{position:fixed;inset:0;z-index:4200;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s}
+.pdf-gate-modal.open{opacity:1;visibility:visible}
+.pdf-gate-box{
+  position:relative;width:100%;max-width:340px;background:var(--panel);border:1px solid var(--line-soft);
+  border-radius:18px;padding:32px 26px;text-align:center;
+  transform:translateY(20px) scale(.97);opacity:0;transition:transform .35s var(--ease),opacity .35s var(--ease);
+}
+.pdf-gate-modal.open .pdf-gate-box{transform:translateY(0) scale(1);opacity:1}
+.pdf-gate-icon{width:48px;height:48px;border-radius:50%;background:rgba(242,194,48,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.pdf-gate-icon svg{width:22px;height:22px;color:var(--gold)}
+.pdf-gate-box h4{font-family:var(--ff-head);font-size:15px;text-transform:uppercase;letter-spacing:.02em;color:var(--ink);margin-bottom:18px;line-height:1.4}
+.pdf-gate-pins{display:flex;gap:9px;justify-content:center;margin-bottom:12px}
+.pdf-gate-pins.shake{animation:gateShake .45s}
+.pdf-gate-error{font-size:12px;color:#ff6a52;opacity:0;transition:opacity .2s;min-height:16px}
+.pdf-gate-error.show{opacity:1}
 @media(max-width:700px){
   .docmodal{padding:0}
   .docmodal{padding:0}
@@ -1228,7 +1242,7 @@ body.modal-locked{overflow:hidden}
         <h3 class="docmodal-title">ЭХ ОРНЫ ДУУДЛАГА</h3>
       </div>
       <div class="docmodal-head-actions">
-        <a href="assets/eh-oron-duudlaga-tosol.pdf" download class="btn btn-gold docmodal-dl"><svg><use href="#i-download"/></svg><span>PDF татах</span></a>
+        <button type="button" class="btn btn-gold docmodal-dl js-pdf-gate-btn"><svg><use href="#i-download"/></svg><span>PDF татах</span></button>
         <button class="modal-close" id="proposalClose" type="button" aria-label="close"><svg><use href="#i-close"/></svg></button>
       </div>
     </div>
@@ -1378,22 +1392,6 @@ body.modal-locked{overflow:hidden}
       </div>
 
       <h4 class="doc-h1">8. Төсвийн дэлгэрэнгүй задаргаа</h4>
-
-      <div class="money-gate" id="moneyGate">
-        <div class="money-gate-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <div class="money-gate-text">
-          <strong>Төсвийн дүн нууцлагдсан</strong>
-          <span>Харахын тулд тусгай кодоо оруулна уу.</span>
-        </div>
-        <div class="money-gate-pins">
-          <input type="tel" inputmode="numeric" maxlength="1" class="money-pin" data-i="0" autocomplete="off">
-          <input type="tel" inputmode="numeric" maxlength="1" class="money-pin" data-i="1" autocomplete="off">
-          <input type="tel" inputmode="numeric" maxlength="1" class="money-pin" data-i="2" autocomplete="off">
-          <input type="tel" inputmode="numeric" maxlength="1" class="money-pin" data-i="3" autocomplete="off">
-        </div>
-      </div>
       <p class="doc-p">Доорх дүн нь 10 хоногийн зураг авалтаар бодогдсон нийт төсөв юм.</p>
       <div class="doc-table-wrap">
         <table class="doc-table doc-table-budget">
@@ -1452,7 +1450,24 @@ body.modal-locked{overflow:hidden}
           </tbody>
         </table>
       </div>
-      <p class="doc-total-line">НИЙТ ТӨСӨВ: 324,600,000 ₮ (324.6 сая төгрөг)</p>
+      <div class="total-lock" id="totalLock">
+        <div class="total-lock-locked" id="totalLockLocked">
+          <div class="total-lock-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="total-lock-text">
+            <strong>Нийт төсвийн дүн нууцлагдсан</strong>
+            <span>Харахын тулд тусгай кодоо оруулна уу.</span>
+          </div>
+          <div class="total-lock-pins">
+            <input type="tel" inputmode="numeric" maxlength="1" class="total-pin" data-i="0" autocomplete="off">
+            <input type="tel" inputmode="numeric" maxlength="1" class="total-pin" data-i="1" autocomplete="off">
+            <input type="tel" inputmode="numeric" maxlength="1" class="total-pin" data-i="2" autocomplete="off">
+            <input type="tel" inputmode="numeric" maxlength="1" class="total-pin" data-i="3" autocomplete="off">
+          </div>
+        </div>
+        <p class="doc-total-line" id="totalLine" style="display:none"></p>
+      </div>
 
       <h4 class="doc-h1">9. Ивээн тэтгэгчийн багцууд</h4>
       <p class="doc-p">Нийт 324.6 сая төгрөгийн төсвийг дараах багцуудаар бүрдүүлэхээр төлөвлөж байна. Багцын дүн, эрхийг байгууллагын хэрэгцээнд нийцүүлэн уян хатан тохируулах боломжтой.</p>
@@ -1460,7 +1475,7 @@ body.modal-locked{overflow:hidden}
         <table class="doc-table doc-table-tiers">
           <thead><tr><th>Ивээн тэтгэгчийн эрх</th><th>Ерөнхий</th><th>Алтан</th><th>Мөнгөн</th><th>Хүрэл</th><th>Дэмжигч</th></tr></thead>
           <tbody>
-            <tr class="money-row"><td>Хөрөнгө оруулалт (₮)</td><td>150 сая+</td><td>80 сая</td><td>40 сая</td><td>20 сая</td><td>Бараа, үйлчилгээ</td></tr>
+            <tr><td>Хөрөнгө оруулалт (₮)</td><td>150 сая+</td><td>80 сая</td><td>40 сая</td><td>20 сая</td><td>Бараа, үйлчилгээ</td></tr>
             <tr><td>&ldquo;Presented by&rdquo; нэрэмжит цол</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
             <tr><td>Нээлт, төгсгөлийн титрт лого</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
             <tr><td>Анги бүрт брэнд дурдагдах</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
@@ -1486,11 +1501,30 @@ body.modal-locked{overflow:hidden}
       </ul>
 
       <div class="doc-footer-cta">
-        <a href="assets/eh-oron-duudlaga-tosol.pdf" download class="btn btn-gold"><svg><use href="#i-download"/></svg>PDF хувилбарыг татах</a>
+        <button type="button" class="btn btn-gold js-pdf-gate-btn"><svg><use href="#i-download"/></svg>PDF хувилбарыг татах</button>
         <button type="button" class="btn btn-ghost" id="proposalToSponsorBtn">Ивээн тэтгэгч болох</button>
       </div>
 
     </div>
+  </div>
+</div>
+
+<!-- PDF DOWNLOAD PIN GATE -->
+<div class="pdf-gate-modal" id="pdfGateModal">
+  <div class="modal-backdrop" id="pdfGateBackdrop"></div>
+  <div class="pdf-gate-box">
+    <button class="modal-close" id="pdfGateClose" type="button" aria-label="close"><svg><use href="#i-close"/></svg></button>
+    <div class="pdf-gate-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h4>PDF татахын тулд тусгай кодоо оруулна уу</h4>
+    <div class="pdf-gate-pins" id="pdfGatePins">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pdf-pin" data-i="0" autocomplete="off">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pdf-pin" data-i="1" autocomplete="off">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pdf-pin" data-i="2" autocomplete="off">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pdf-pin" data-i="3" autocomplete="off">
+    </div>
+    <p class="pdf-gate-error" id="pdfGateError">Буруу код байна. Дахин оролдоно уу.</p>
   </div>
 </div>
 
@@ -1639,45 +1673,117 @@ body.modal-locked{overflow:hidden}
   }
 })();
 
-// ---- money-figure re-lock inside the proposal document ----
-(function(){
-  const CODE = '9090';
-  const gate = document.getElementById('moneyGate');
-  const body = document.querySelector('.docmodal-body');
-  if(!gate || !body) return;
-  const pins = [...gate.querySelectorAll('.money-pin')];
+// ---- shared budget PIN (9090) — gates the НИЙТ ТӨСӨВ total and PDF download ----
+const BUDGET_CODE = '9090';
+function isBudgetUnlocked(){ return sessionStorage.getItem('eod_budget_unlocked') === '1'; }
+function setBudgetUnlocked(){ sessionStorage.setItem('eod_budget_unlocked','1'); }
 
-  const figures = document.querySelectorAll('.doc-table-budget td:nth-child(2), .doc-total-line, .money-row td:not(:first-child)');
-  figures.forEach(el=>{
-    el.classList.add('money-figure');
-    el.dataset.real = el.textContent;
-    el.textContent = el.textContent.replace(/[0-9]/g, '•');
-  });
+// total-budget reveal (fetches the real figure only after the code is verified,
+// so it never sits in the page's initial HTML/DOM for a plain view-source/F12 look)
+(function(){
+  const lockedView = document.getElementById('totalLockLocked');
+  const lineEl = document.getElementById('totalLine');
+  if(!lockedView || !lineEl) return;
+  const pins = [...lockedView.querySelectorAll('.total-pin')];
 
   function reveal(){
-    figures.forEach(el=>{ el.textContent = el.dataset.real; });
+    fetch('assets/data/budget-total.json')
+      .then(r => r.json())
+      .then(data => {
+        lineEl.textContent = data.text;
+        lineEl.style.display = '';
+        lockedView.style.display = 'none';
+      })
+      .catch(()=>{});
   }
 
-  if(sessionStorage.getItem('eod_money_unlocked') === '1'){
-    body.classList.add('money-unlocked');
-    reveal();
-  }
+  if(isBudgetUnlocked()) reveal();
 
   function attempt(){
     const entered = pins.map(p=>p.value).join('');
     if(entered.length < 4) return;
-    if(entered === CODE){
-      sessionStorage.setItem('eod_money_unlocked','1');
-      body.classList.add('money-unlocked');
+    if(entered === BUDGET_CODE){
+      setBudgetUnlocked();
       reveal();
     } else {
-      gate.classList.remove('shake');
-      void gate.offsetWidth;
-      gate.classList.add('shake');
+      lockedView.classList.remove('shake');
+      void lockedView.offsetWidth;
+      lockedView.classList.add('shake');
       pins.forEach(p=>p.value='');
       pins[0].focus();
     }
   }
+
+  pins.forEach((input, i)=>{
+    input.addEventListener('input', ()=>{
+      input.value = input.value.replace(/[^0-9]/g,'').slice(0,1);
+      if(input.value && pins[i+1]) pins[i+1].focus();
+      if(pins.every(p=>p.value)) attempt();
+    });
+    input.addEventListener('keydown', (e)=>{
+      if(e.key === 'Backspace' && !input.value && pins[i-1]) pins[i-1].focus();
+      if(e.key === 'Enter') attempt();
+    });
+  });
+})();
+
+// pdf download gate
+(function(){
+  const modal = document.getElementById('pdfGateModal');
+  if(!modal) return;
+  const backdrop = document.getElementById('pdfGateBackdrop');
+  const closeBtn = document.getElementById('pdfGateClose');
+  const pinsWrap = document.getElementById('pdfGatePins');
+  const pins = [...pinsWrap.querySelectorAll('.pdf-pin')];
+  const errorEl = document.getElementById('pdfGateError');
+  const triggerBtns = [...document.querySelectorAll('.js-pdf-gate-btn')];
+
+  function triggerDownload(){
+    const a = document.createElement('a');
+    a.href = 'assets/eh-oron-duudlaga-tosol.pdf';
+    a.download = 'Eh-orny-duudlaga-tosol.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+  function openGate(){
+    pins.forEach(p=>p.value='');
+    errorEl.classList.remove('show');
+    modal.classList.add('open');
+    document.body.classList.add('modal-locked');
+    setTimeout(()=>pins[0] && pins[0].focus(), 300);
+  }
+  function closeGate(){
+    modal.classList.remove('open');
+    document.body.classList.remove('modal-locked');
+  }
+  function attempt(){
+    const entered = pins.map(p=>p.value).join('');
+    if(entered.length < 4) return;
+    if(entered === BUDGET_CODE){
+      setBudgetUnlocked();
+      closeGate();
+      triggerDownload();
+    } else {
+      errorEl.classList.add('show');
+      pinsWrap.classList.remove('shake');
+      void pinsWrap.offsetWidth;
+      pinsWrap.classList.add('shake');
+      pins.forEach(p=>p.value='');
+      pins[0].focus();
+    }
+  }
+
+  triggerBtns.forEach(btn=>btn.addEventListener('click', ()=>{
+    if(isBudgetUnlocked()){
+      triggerDownload();
+    } else {
+      openGate();
+    }
+  }));
+  backdrop.addEventListener('click', closeGate);
+  closeBtn.addEventListener('click', closeGate);
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && modal.classList.contains('open')) closeGate(); });
 
   pins.forEach((input, i)=>{
     input.addEventListener('input', ()=>{
